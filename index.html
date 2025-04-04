@@ -1,252 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-B0FR54RT4Y"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-B0FR54RT4Y');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GetYoked - Fun Online Fitness Game | Play Now</title>
-    <meta name="description" content="GetYoked is an engaging online fitness game that makes working out fun. Challenge yourself and get fit while playing!">
+    <meta name="description" content="Play Monster Survivors and other exciting games on GetYoked.space - your destination for free online games">
+    <title>Monster Survivors | GetYoked.space</title>
     <link rel="canonical" href="https://getyoked.space">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --apple-blue: #007AFF;
-            --apple-green: #34C759;
-            --apple-orange: #FF9500;
-            --apple-red: #FF3B30;
-            --apple-purple: #AF52DE;
-            --apple-gray: #8E8E93;
-            --apple-black: #1C1C1E;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #F2F2F7;
-            color: var(--apple-black);
-        }
-        
-        .game-container {
-            width: 100%;
-            height: 0;
-            padding-bottom: 65%; /* Aspect ratio for the game */
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        
-        .game-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        .btn-primary {
-            background-color: var(--apple-blue);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0051a8;
-            transform: translateY(-2px);
-        }
-        
-        .feature-card {
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        
-        @media (max-width: 768px) {
-            .game-container {
-                padding-bottom: 80%; /* Adjusted aspect ratio for mobile */
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        apple: {
+                            blue: '#0071e3',
+                            gray: '#f5f5f7',
+                            dark: '#1d1d1f',
+                            light: '#fbfbfd'
+                        }
+                    }
+                }
             }
         }
-    </style>
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0FR54RT4Y"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-B0FR54RT4Y');
+    </script>
 </head>
-<body>
-    <header class="bg-white shadow-sm sticky top-0 z-10">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="/" class="flex items-center">
-                <span class="text-2xl font-bold text-blue-500">GetYoked</span>
-            </a>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#game" class="text-gray-700 hover:text-blue-500 transition">Play Now</a>
-                <a href="#features" class="text-gray-700 hover:text-blue-500 transition">Features</a>
-                <a href="#about" class="text-gray-700 hover:text-blue-500 transition">About</a>
-            </nav>
-            <button class="md:hidden text-gray-700 focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+<body class="bg-apple-light text-apple-dark">
+    <!-- Header -->
+    <header class="sticky top-0 bg-apple-dark text-white shadow-md z-10">
+        <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center mb-2 md:mb-0">
+                <a href="/" class="text-2xl font-bold">GetYoked.space</a>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="w-full md:w-1/3">
+                <form class="flex items-center">
+                    <input type="text" placeholder="Search games..." class="w-full rounded-l px-4 py-2 focus:outline-none text-apple-dark">
+                    <button type="submit" class="bg-apple-blue hover:bg-blue-700 text-white rounded-r px-4 py-2">
+                        Search
+                    </button>
+                </form>
+            </div>
         </div>
+        
+        <!-- Navigation -->
+        <nav class="bg-apple-blue">
+            <div class="container mx-auto px-4">
+                <ul class="flex flex-wrap text-sm font-medium">
+                    <li class="mr-6 py-2"><a href="#" class="hover:underline">Home</a></li>
+                    <li class="mr-6 py-2"><a href="#" class="hover:underline">Action</a></li>
+                    <li class="mr-6 py-2"><a href="#" class="hover:underline">Adventure</a></li>
+                    <li class="mr-6 py-2"><a href="#" class="hover:underline">Strategy</a></li>
+                    <li class="mr-6 py-2"><a href="#" class="hover:underline">RPG</a></li>
+                    <li class="py-2"><a href="#" class="hover:underline">More</a></li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
+    <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
-        <section class="py-12 md:py-20 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6">GetYoked: Fitness Made Fun</h1>
-            <p class="text-xl md:text-2xl mb-8 text-gray-600 max-w-3xl mx-auto">Transform your workout routine into an exciting game experience that keeps you motivated and engaged!</p>
-            <a href="#game" class="btn-primary text-white font-bold py-3 px-8 rounded-full text-lg inline-block">Play Now</a>
+        <!-- Game Title Section -->
+        <section class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">Monster Survivors</h1>
+            <p class="text-xl text-gray-600">Fight endless waves of monsters and survive as long as possible in this action-packed adventure!</p>
         </section>
 
-        <section id="game" class="py-10 md:py-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Play GetYoked Online</h2>
-            <div class="game-container shadow-xl">
-                <iframe src="https://html-classic.itch.zone/html/13171930/Web/index.html" allowfullscreen></iframe>
-            </div>
-            <div class="mt-6 text-center">
-                <p class="text-gray-600">For the best experience, use fullscreen mode and enable sound.</p>
-            </div>
-        </section>
-
-        <section id="features" class="py-10 md:py-16 bg-white rounded-xl shadow-sm my-12 p-8">
-            <h2 class="text-3xl font-bold mb-12 text-center">Game Features</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="feature-card bg-blue-50 p-6 text-center">
-                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Energizing Workouts</h3>
-                    <p class="text-gray-600">Combine fun gameplay with real fitness benefits to stay motivated.</p>
-                </div>
-                <div class="feature-card bg-green-50 p-6 text-center">
-                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Track Progress</h3>
-                    <p class="text-gray-600">Monitor your fitness journey with intuitive tracking and achievements.</p>
-                </div>
-                <div class="feature-card bg-purple-50 p-6 text-center">
-                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Multiplayer Mode</h3>
-                    <p class="text-gray-600">Challenge friends and compete in exciting fitness competitions.</p>
+        <!-- Game Display Section -->
+        <section class="mb-12">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="aspect-w-16 aspect-h-9 relative">
+                    <iframe src="https://cloud.onlinegames.io/games/2025/unity/monster-survivors/index-og.html" 
+                            class="w-full h-[500px] md:h-[600px]" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
                 </div>
             </div>
         </section>
 
-        <section id="about" class="py-10 md:py-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">About GetYoked</h2>
-            <div class="bg-white rounded-xl shadow-sm p-8">
+        <!-- Game Information Section -->
+        <section class="mb-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Game Description -->
+            <div class="md:col-span-2">
+                <h2 class="text-2xl font-bold mb-4">About Monster Survivors</h2>
                 <div class="prose max-w-none">
-                    <p class="mb-4">GetYoked is an innovative fitness game designed to make exercise enjoyable and addictive. By combining engaging gameplay mechanics with effective workout routines, GetYoked transforms the fitness experience into something you'll actually look forward to.</p>
+                    <p class="mb-4">Monster Survivors is an action-packed survival game where you'll face endless waves of monsters. Your goal is simple but challenging: survive as long as possible while defeating hordes of enemies.</p>
                     
-                    <p class="mb-4">Our mission is to help people develop consistent exercise habits through gamification. Whether you're a fitness enthusiast or someone who struggles to stay motivated, GetYoked provides the perfect balance of fun and effectiveness.</p>
+                    <p class="mb-4">As you progress through the game, you'll unlock new abilities, weapons, and power-ups that will help you combat increasingly difficult monsters. The game features procedurally generated levels, ensuring that no two playthroughs are exactly the same.</p>
                     
-                    <h3 class="text-xl font-semibold mt-6 mb-3">How to Play</h3>
-                    <p class="mb-4">Simply use the embedded game above to start playing right away. No downloads required! The game adapts to your fitness level and provides increasingly challenging workouts as you progress. Track your achievements, compete with friends, and watch as your virtual and real-life strength grow together.</p>
-                    
-                    <h3 class="text-xl font-semibold mt-6 mb-3">Benefits</h3>
+                    <p>With its engaging gameplay mechanics and progressively challenging difficulty, Monster Survivors offers hours of entertainment for players of all skill levels.</p>
+                </div>
+                
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Play</h2>
+                <div class="prose max-w-none">
+                    <p class="mb-4">Controls are simple and intuitive:</p>
                     <ul class="list-disc pl-5 mb-4">
-                        <li>Increased motivation through gamification</li>
-                        <li>Effective workouts designed by fitness professionals</li>
-                        <li>Progress tracking and achievement system</li>
-                        <li>Social features to compete with friends</li>
-                        <li>Accessible for all fitness levels</li>
+                        <li>Use WASD or arrow keys to move your character</li>
+                        <li>Your character automatically attacks nearby enemies</li>
+                        <li>Collect experience orbs to level up and choose new abilities</li>
+                        <li>Pick up power-ups to enhance your character's abilities</li>
+                    </ul>
+                    <p>The longer you survive, the stronger you become - but beware, the monsters also get tougher over time!</p>
+                </div>
+            </div>
+            
+            <!-- Game Info Sidebar -->
+            <div>
+                <div class="bg-apple-gray rounded-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4">Game Details</h2>
+                    <div class="space-y-3">
+                        <div>
+                            <span class="font-semibold">Genre:</span> Action, Survival
+                        </div>
+                        <div>
+                            <span class="font-semibold">Platform:</span> Browser
+                        </div>
+                        <div>
+                            <span class="font-semibold">Controls:</span> Keyboard
+                        </div>
+                        <div>
+                            <span class="font-semibold">Developer:</span> GetYoked Studios
+                        </div>
+                        <div>
+                            <span class="font-semibold">Release Date:</span> 2025
+                        </div>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold mt-8 mb-4">Features</h2>
+                    <ul class="list-disc pl-5">
+                        <li>Procedurally generated levels</li>
+                        <li>Multiple character classes</li>
+                        <li>Dozens of unique abilities</li>
+                        <li>Countless enemy types</li>
+                        <li>Challenging boss fights</li>
+                        <li>Progressive difficulty system</li>
                     </ul>
                 </div>
             </div>
         </section>
+        
+        <!-- More Games Section (Placeholder) -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6">More Games Coming Soon</h2>
+            <div class="bg-apple-gray p-8 rounded-lg text-center">
+                <p class="text-xl">We're working on adding more exciting games to our collection.</p>
+                <p class="mt-2">Check back soon for new titles!</p>
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-gray-900 text-white py-12">
+    <!-- Footer -->
+    <footer class="bg-apple-dark text-white py-8">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between">
-                <div class="mb-6 md:mb-0">
-                    <h2 class="text-2xl font-bold mb-4">GetYoked</h2>
-                    <p class="text-gray-400 max-w-md">Transform your fitness journey with our engaging workout game. Get fit, have fun, and stay motivated!</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">GetYoked.space</h3>
+                    <p>Your destination for free online games. Play the best browser games without downloads.</p>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="text-lg font-semibold mb-3">Game</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#game" class="text-gray-400 hover:text-white transition">Play Now</a></li>
-                            <li><a href="#features" class="text-gray-400 hover:text-white transition">Features</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Updates</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-3">Company</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#about" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-3">Legal</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a></li>
-                        </ul>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Categories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">Action Games</a></li>
+                        <li><a href="#" class="hover:underline">Adventure Games</a></li>
+                        <li><a href="#" class="hover:underline">Strategy Games</a></li>
+                        <li><a href="#" class="hover:underline">RPG Games</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Information</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">About Us</a></li>
+                        <li><a href="#" class="hover:underline">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:underline">Terms of Service</a></li>
+                        <li><a href="#" class="hover:underline">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-apple-blue">Twitter</a>
+                        <a href="#" class="hover:text-apple-blue">Facebook</a>
+                        <a href="#" class="hover:text-apple-blue">Instagram</a>
+                        <a href="#" class="hover:text-apple-blue">Discord</a>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400">&copy; 2025 GetYoked. All rights reserved.</p>
-                <div class="flex space-x-4 mt-4 md:mt-0">
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-                        </svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"></path>
-                        </svg>
-                    </a>
-                </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p>&copy; 2025 GetYoked.space. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
-    <script>
-        // Simple mobile menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('button');
-            const nav = document.querySelector('nav');
-            
-            menuButton.addEventListener('click', function() {
-                nav.classList.toggle('hidden');
-                nav.classList.toggle('flex');
-                nav.classList.toggle('flex-col');
-                nav.classList.toggle('absolute');
-                nav.classList.toggle('top-16');
-                nav.classList.toggle('right-4');
-                nav.classList.toggle('bg-white');
-                nav.classList.toggle('p-4');
-                nav.classList.toggle('shadow-lg');
-                nav.classList.toggle('rounded-lg');
-            });
-        });
-    </script>
 </body>
 </html>
