@@ -477,7 +477,7 @@
                     <div class="game-info">
                         <h3>Monster Survivors</h3>
                         <p>Survive endless waves of monsters in this thrilling action game. Upgrade your character and defeat powerful bosses!</p>
-                        <a href="#monster-survivors" class="play-button">Play Now</a>
+                        <a href="game-monster-survivors.html" class="play-button">Play Now</a>
                     </div>
                 </div>
                 
@@ -488,7 +488,7 @@
                     <div class="game-info">
                         <h3>Endless Anti Furry Killer</h3>
                         <p>Fast-paced action shooter with endless waves of enemies. Test your reflexes and survival skills!</p>
-                        <a href="#endless-anti-furry-killer" class="play-button">Play Now</a>
+                        <a href="game-endless-anti-furry-killer.html" class="play-button">Play Now</a>
                     </div>
                 </div>
             </div>
@@ -508,7 +508,7 @@
                     <div class="game-info">
                         <h3>Guardian Sphere</h3>
                         <p>Embark on an epic journey to protect the mystical Guardian Sphere. Solve puzzles and defeat enemies in this immersive adventure.</p>
-                        <a href="#guardian-sphere" class="play-button">Play Now</a>
+                        <a href="game-guardian-sphere.html" class="play-button">Play Now</a>
                     </div>
                 </div>
                 
@@ -519,7 +519,7 @@
                     <div class="game-info">
                         <h3>Velo Kitty</h3>
                         <p>Join Velo Kitty on a charming adventure through colorful worlds. Perfect for players of all ages!</p>
-                        <a href="#velo-kitty" class="play-button">Play Now</a>
+                        <a href="game-velo-kitty.html" class="play-button">Play Now</a>
                     </div>
                 </div>
             </div>
@@ -539,7 +539,7 @@
                     <div class="game-info">
                         <h3>Idle Cafe Tycoon</h3>
                         <p>Build and manage your own cafe empire! Hire staff, upgrade equipment, and satisfy customers in this addictive idle simulation game.</p>
-                        <a href="#idle-cafe-tycoon" class="play-button">Play Now</a>
+                        <a href="game-idle-cafe-tycoon.html" class="play-button">Play Now</a>
                     </div>
                 </div>
             </div>
@@ -611,7 +611,7 @@
             document.querySelector('nav').classList.toggle('active');
         });
         
-        // Game Page Navigation
+        // Game Page Navigation (for demonstration purposes)
         const playButtons = document.querySelectorAll('.play-button');
         const homePage = document.querySelector('main');
         const gamePage = document.getElementById('game-page');
@@ -663,10 +663,6 @@
                     
                     // Scroll to top
                     window.scrollTo(0, 0);
-                    
-                    // Update URL (adds to history but doesn't actually navigate)
-                    const slug = gameName.toLowerCase().replace(/\s+/g, '-');
-                    history.pushState({game: gameName}, gameName, `#${slug}`);
                 }
             });
         });
@@ -681,12 +677,9 @@
             
             // Stop the game
             activeGame.src = '';
-            
-            // Restore original URL
-            history.pushState({}, document.title, window.location.pathname);
         });
         
-        // Simple search functionality
+        // Simple search functionality (for demonstration)
         const searchForm = document.querySelector('.search-bar');
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -710,54 +703,6 @@
             if (visibleCards.length === 0) {
                 alert('No games found matching your search. Please try a different keyword.');
                 gameCards.forEach(card => card.style.display = 'block');
-            }
-        });
-        
-        // Check for hash in URL on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            const hash = window.location.hash;
-            if (hash) {
-                const slug = hash.substring(1); // remove the #
-                // Find matching game by slug
-                for (const [name, data] of Object.entries(games)) {
-                    const gameSlug = name.toLowerCase().replace(/\s+/g, '-');
-                    if (gameSlug === slug) {
-                        // Set game page content
-                        activeGame.src = data.url;
-                        gameTitle.textContent = name;
-                        gameDescription.textContent = data.description;
-                        
-                        // Show game page, hide home page
-                        homePage.style.display = 'none';
-                        gamePage.style.display = 'block';
-                        break;
-                    }
-                }
-            }
-        });
-        
-        // Handle browser back/forward buttons
-        window.addEventListener('popstate', function(event) {
-            const hash = window.location.hash;
-            if (hash) {
-                // Show game page for the hash in URL
-                const slug = hash.substring(1);
-                for (const [name, data] of Object.entries(games)) {
-                    const gameSlug = name.toLowerCase().replace(/\s+/g, '-');
-                    if (gameSlug === slug) {
-                        activeGame.src = data.url;
-                        gameTitle.textContent = name;
-                        gameDescription.textContent = data.description;
-                        homePage.style.display = 'none';
-                        gamePage.style.display = 'block';
-                        break;
-                    }
-                }
-            } else {
-                // Show home page
-                gamePage.style.display = 'none';
-                homePage.style.display = 'block';
-                activeGame.src = '';
             }
         });
     </script>
