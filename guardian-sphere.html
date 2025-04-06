@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardian Sphere - GetYoked.space</title>
+    <meta name="description" content="Play Guardian Sphere, an exciting action game where you protect your realm from invading forces.">
+    <link rel="canonical" href="https://getyoked.space/guardian-sphere.html">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0FR54RT4Y"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-B0FR54RT4Y');
+    </script>
+    <style>
+        :root {
+            --apple-blue: #0066CC;
+            --apple-light-blue: #5AC8FA;
+            --apple-green: #34C759;
+            --apple-orange: #FF9500;
+            --apple-purple: #AF52DE;
+            --apple-red: #FF3B30;
+            --apple-gray: #8E8E93;
+            --apple-dark-gray: #3A3A3C;
+            --apple-background: #F2F2F7;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--apple-background);
+        }
+        .game-container {
+            height: 80vh;
+            min-height: 500px;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--apple-blue);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <a href="index.html" class="text-2xl font-bold" style="color: var(--apple-blue);">GetYoked.space</a>
+                </div>
+                
+                <!-- Navigation -->
+                <nav>
+                    <ul class="flex flex-wrap justify-center space-x-6">
+                        <li><a href="index.html" class="nav-link text-gray-800 hover:text-blue-600">Home</a></li>
+                        <li><a href="index.html#action" class="nav-link text-gray-800 hover:text-blue-600">Action</a></li>
+                        <li><a href="index.html#simulation" class="nav-link text-gray-800 hover:text-blue-600">Simulation</a></li>
+                        <li><a href="index.html#adventure" class="nav-link text-gray-800 hover:text-blue-600">Adventure</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Game Section -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-center">Guardian Sphere</h1>
+            <p class="text-lg text-center mb-8">Defend your realm with your mystical sphere against waves of invading forces.</p>
+            
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- Game Container -->
+                <div class="game-container w-full">
+                    <iframe src="https://html-classic.itch.zone/html/2260147/index.html" frameborder="0" class="w-full h-full"></iframe>
+                </div>
+                
+                <!-- Game Description -->
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">About Guardian Sphere</h2>
+                    <p class="mb-4">Guardian Sphere is an action-packed defense game where you control a powerful sphere with magical abilities. Your mission is to protect your realm from endless waves of enemies using strategic movements and powerful attacks. With stunning visuals and engaging gameplay, Guardian Sphere offers an exciting challenge for players of all skill levels.</p>
+                    
+                    <h2 class="text-2xl font-bold mb-4 mt-8">Game Features</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Gameplay</h3>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>Dynamic sphere controls with unique abilities</li>
+                                <li>Multiple enemy types with different attack patterns</li>
+                                <li>Power-ups and special attacks to discover</li>
+                                <li>Progressively challenging levels</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Tips</h3>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>Master the sphere's momentum for better control</li>
+                                <li>Prioritize threatening enemies first</li>
+                                <li>Save special abilities for critical moments</li>
+                                <li>Look for patterns in enemy waves to prepare accordingly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More Games Section -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold mb-6">More Games You Might Like</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <a href="velo-kitty.html" class="block bg-white rounded-lg shadow-md hover:shadow-lg transition">
+                        <div class="h-32 rounded-t-lg flex items-center justify-center" style="background-color: var(--apple-orange);">
+                            <span class="text-white font-bold">Velo Kitty</span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold">Velo Kitty</h3>
+                            <p class="text-sm text-gray-600">Join Kitty on a speedy adventure!</p>
+                        </div>
+                    </a>
+                    
+                    <a href="monster-survivors.html" class="block bg-white rounded-lg shadow-md hover:shadow-lg transition">
+                        <div class="h-32 rounded-t-lg flex items-center justify-center" style="background-color: var(--apple-light-blue);">
+                            <span class="text-white font-bold">Monster Survivors</span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold">Monster Survivors</h3>
+                            <p class="text-sm text-gray-600">Survive endless waves of monsters!</p>
+                        </div>
+                    </a>
+                    
+                    <a href="endless-anti-furry-killer.html" class="block bg-white rounded-lg shadow-md hover:shadow-lg transition">
+                        <div class="h-32 rounded-t-lg flex items-center justify-center" style="background-color: var(--apple-red);">
+                            <span class="text-white font-bold">Endless Anti Furry Killer</span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold">Endless Anti Furry Killer</h3>
+                            <p class="text-sm text-gray-600">Action-packed endless shooter game!</p>
+                        </div>
+                    </a>
+                    
+                    <a href="idle-cafe-tycoon.html" class="block bg-white rounded-lg shadow-md hover:shadow-lg transition">
+                        <div class="h-32 rounded-t-lg flex items-center justify-center" style="background-color: var(--apple-green);">
+                            <span class="text-white font-bold">Idle Cafe Tycoon</span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold">Idle Cafe Tycoon</h3>
+                            <p class="text-sm text-gray-600">Build and manage your dream cafe!</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-6 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center text-gray-600">
+                <p>&copy; 2025 GetYoked.space. All rights reserved.</p>
+                <p class="mt-2 text-sm">The best free online games collection.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
