@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nick Unstuck Adventures</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body { 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: transparent;
+  min-height: 100vh;
+  padding: 20px;
+  line-height: 1.3;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.header {
+  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  color: white;
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 300;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.content {
+  padding: 30px 40px;
+}
+
+.section {
+  margin-bottom: 35px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #3498db;
+  display: inline-block;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 6px;
+}
+
+.card {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e1e8ed;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  border-color: #3498db;
+}
+
+.card-content {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+}
+
+.word {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 13px;
+  min-width: 70px;
+  text-align: left;
+}
+
+.phonetic {
+  font-size: 11px;
+  color: #333333;
+  font-family: 'Courier New', monospace;
+  min-width: 80px;
+  text-align: center;
+}
+
+.definition {
+  font-size: 12px;
+  color: #333333;
+  flex: 1;
+  text-align: center;
+}
+
+.speak-btn {
+  background: transparent;
+  border: none;
+  color: #333333;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  padding: 4px;
+}
+
+.speak-btn:hover {
+  background: #f0f0f0;
+  color: #000000;
+  transform: scale(1.1);
+}
+
+.speak-btn:active {
+  transform: scale(0.9);
+}
+
+.status-indicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+}
+
+.status-indicator:hover {
+  transform: scale(1.2);
+}
+
+.status-indicator.unknown {
+  background: #ff4757;
+  border-color: #ff3742;
+}
+
+.status-indicator.learning {
+  background: #ffa502;
+  border-color: #ff9500;
+}
+
+.status-indicator.mastered {
+  background: #2ed573;
+  border-color: #26d463;
+}
+
+.status-indicator.default {
+  background: #f5f5f5;
+  border-color: #ddd;
+}
+
+/* 响应式设计 */
+@media (max-width: 1400px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    max-width: 100%;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .card-content {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+  
+  .word {
+    font-size: 12px;
+    min-width: 60px;
+  }
+  
+  .phonetic {
+    font-size: 10px;
+    min-width: 70px;
+  }
+  
+  .definition {
+    font-size: 11px;
+  }
+  
+  .speak-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    top: 3px;
+    right: 3px;
+  }
+}
+
+/* 加载动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.card:nth-child(n) {
+  animation-delay: calc(0.02s * var(--card-index, 0));
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Nick Unstuck Adventures</h1>
+  </div>
+  
+  <div class="content">
+    <!-- 第一梯队：绝对核心词汇（每集必用）13个 -->
+    <div class="section">
+      <h2 class="section-title">第一梯队：绝对核心词汇（每集必用）</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="road"></div><div class="word">road</div><div class="phonetic">/rəʊd/</div><div class="definition">路</div><button class="speak-btn" onclick="speak('road')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bike"></div><div class="word">bike</div><div class="phonetic">/baɪk/</div><div class="definition">摩托车</div><button class="speak-btn" onclick="speak('bike')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="day"></div><div class="word">day</div><div class="phonetic">/deɪ/</div><div class="definition">天</div><button class="speak-btn" onclick="speak('day')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="view"></div><div class="word">view</div><div class="phonetic">/vjuː/</div><div class="definition">景色</div><button class="speak-btn" onclick="speak('view')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="beautiful"></div><div class="word">beautiful</div><div class="phonetic">/ˈbjuːtɪfəl/</div><div class="definition">美丽的</div><button class="speak-btn" onclick="speak('beautiful')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="amazing"></div><div class="word">amazing</div><div class="phonetic">/əˈmeɪzɪŋ/</div><div class="definition">惊人的</div><button class="speak-btn" onclick="speak('amazing')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="good"></div><div class="word">good</div><div class="phonetic">/ɡʊd/</div><div class="definition">好的</div><button class="speak-btn" onclick="speak('good')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="water"></div><div class="word">water</div><div class="phonetic">/ˈwɔːtə/</div><div class="definition">水</div><button class="speak-btn" onclick="speak('water')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="people"></div><div class="word">people</div><div class="phonetic">/ˈpiːpəl/</div><div class="definition">人们</div><button class="speak-btn" onclick="speak('people')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="go"></div><div class="word">go</div><div class="phonetic">/ɡəʊ/</div><div class="definition">走，去</div><button class="speak-btn" onclick="speak('go')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="see"></div><div class="word">see</div><div class="phonetic">/siː/</div><div class="definition">看见</div><button class="speak-btn" onclick="speak('see')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="ride"></div><div class="word">ride</div><div class="phonetic">/raɪd/</div><div class="definition">骑行</div><button class="speak-btn" onclick="speak('ride')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="rode"></div><div class="word">rode</div><div class="phonetic">/rəʊd/</div><div class="definition">骑行过去式</div><button class="speak-btn" onclick="speak('rode')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 路面类型 12个 -->
+    <div class="section">
+      <h2 class="section-title">路面类型</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tarmac"></div><div class="word">tarmac</div><div class="phonetic">/ˈtɑːmæk/</div><div class="definition">柏油路</div><button class="speak-btn" onclick="speak('tarmac')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="pavement"></div><div class="word">pavement</div><div class="phonetic">/ˈpeɪvmənt/</div><div class="definition">铺装路面</div><button class="speak-btn" onclick="speak('pavement')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="gravel"></div><div class="word">gravel</div><div class="phonetic">/ˈɡrævəl/</div><div class="definition">砂石路</div><button class="speak-btn" onclick="speak('gravel')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="gravel road"></div><div class="word">gravel road</div><div class="phonetic">/ˈɡrævəl rəʊd/</div><div class="definition">碎石路</div><button class="speak-btn" onclick="speak('gravel road')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="sand"></div><div class="word">sand</div><div class="phonetic">/sænd/</div><div class="definition">沙子</div><button class="speak-btn" onclick="speak('sand')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mud"></div><div class="word">mud</div><div class="phonetic">/mʌd/</div><div class="definition">泥巴</div><button class="speak-btn" onclick="speak('mud')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="dirt"></div><div class="word">dirt</div><div class="phonetic">/dɜːt/</div><div class="definition">土路</div><button class="speak-btn" onclick="speak('dirt')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="dirt road"></div><div class="word">dirt road</div><div class="phonetic">/dɜːt rəʊd/</div><div class="definition">土路</div><button class="speak-btn" onclick="speak('dirt road')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="track"></div><div class="word">track</div><div class="phonetic">/træk/</div><div class="definition">小径</div><button class="speak-btn" onclick="speak('track')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="trail"></div><div class="word">trail</div><div class="phonetic">/treɪl/</div><div class="definition">林间小道</div><button class="speak-btn" onclick="speak('trail')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tar"></div><div class="word">tar</div><div class="phonetic">/tɑː/</div><div class="definition">柏油</div><button class="speak-btn" onclick="speak('tar')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="muddy"></div><div class="word">muddy</div><div class="phonetic">/ˈmʌdi/</div><div class="definition">泥泞的</div><button class="speak-btn" onclick="speak('muddy')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 路况描述 16个 -->
+    <div class="section">
+      <h2 class="section-title">路况描述</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="corrugations"></div><div class="word">corrugations</div><div class="phonetic">/ˌkɒrəˈɡeɪʃənz/</div><div class="definition">搓板路</div><button class="speak-btn" onclick="speak('corrugations')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="washboard"></div><div class="word">washboard</div><div class="phonetic">/ˈwɒʃbɔːd/</div><div class="definition">搓板路</div><button class="speak-btn" onclick="speak('washboard')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bumpy"></div><div class="word">bumpy</div><div class="phonetic">/ˈbʌmpi/</div><div class="definition">颠簸的</div><button class="speak-btn" onclick="speak('bumpy')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="smooth"></div><div class="word">smooth</div><div class="phonetic">/smuːð/</div><div class="definition">平顺的</div><button class="speak-btn" onclick="speak('smooth')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="smooth ride"></div><div class="word">smooth ride</div><div class="phonetic">/smuːð raɪd/</div><div class="definition">平稳的行驶</div><button class="speak-btn" onclick="speak('smooth ride')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="smooth ride"></div><div class="word">smooth ride</div><div class="phonetic">/smuːð raɪd/</div><div class="definition">平稳的行驶</div><button class="speak-btn" onclick="speak('smooth ride')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="steep"></div><div class="word">steep</div><div class="phonetic">/stiːp/</div><div class="definition">陡峭的</div><button class="speak-btn" onclick="speak('steep')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="slippery"></div><div class="word">slippery</div><div class="phonetic">/ˈslɪpəri/</div><div class="definition">湿滑的</div><button class="speak-btn" onclick="speak('slippery')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="twisties"></div><div class="word">twisties</div><div class="phonetic">/ˈtwɪstiz/</div><div class="definition">连续弯道</div><button class="speak-btn" onclick="speak('twisties')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="rocky"></div><div class="word">rocky</div><div class="phonetic">/ˈrɒki/</div><div class="definition">多石的</div><button class="speak-btn" onclick="speak('rocky')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="rough"></div><div class="word">rough</div><div class="phonetic">/rʌf/</div><div class="definition">粗糙的，艰难的</div><button class="speak-btn" onclick="speak('rough')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="grippy"></div><div class="word">grippy</div><div class="phonetic">/ˈɡrɪpi/</div><div class="definition">抓地力强的</div><button class="speak-btn" onclick="speak('grippy')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="narrow"></div><div class="word">narrow</div><div class="phonetic">/ˈnærəʊ/</div><div class="definition">狭窄的</div><button class="speak-btn" onclick="speak('narrow')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="winding"></div><div class="word">winding</div><div class="phonetic">/ˈwaɪndɪŋ/</div><div class="definition">蜿蜒的</div><button class="speak-btn" onclick="speak('winding')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="pave"></div><div class="word">pave</div><div class="phonetic">/peɪv/</div><div class="definition">铺路</div><button class="speak-btn" onclick="speak('pave')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="potholes"></div><div class="word">potholes</div><div class="phonetic">/ˈpɒthəʊlz/</div><div class="definition">坑洞</div><button class="speak-btn" onclick="speak('potholes')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 路况状态 4个 -->
+    <div class="section">
+      <h2 class="section-title">路况状态</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="under construction"></div><div class="word">under construction</div><div class="phonetic">/ˈʌndə kənˈstrʌkʃən/</div><div class="definition">正在建设中</div><button class="speak-btn" onclick="speak('under construction')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="newly paved"></div><div class="word">newly paved</div><div class="phonetic">/ˈnjuːli peɪvd/</div><div class="definition">新铺的</div><button class="speak-btn" onclick="speak('newly paved')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="blocked"></div><div class="word">blocked</div><div class="phonetic">/blɒkt/</div><div class="definition">封锁的</div><button class="speak-btn" onclick="speak('blocked')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="road condition"></div><div class="word">road condition</div><div class="phonetic">/rəʊd kənˈdɪʃən/</div><div class="definition">路况</div><button class="speak-btn" onclick="speak('road condition')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 道路设施与类型 19个 -->
+    <div class="section">
+      <h2 class="section-title">道路设施与类型</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bridge"></div><div class="word">bridge</div><div class="phonetic">/brɪdʒ/</div><div class="definition">桥梁</div><button class="speak-btn" onclick="speak('bridge')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tunnel"></div><div class="word">tunnel</div><div class="phonetic">/ˈtʌnəl/</div><div class="definition">隧道</div><button class="speak-btn" onclick="speak('tunnel')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="underpass"></div><div class="word">underpass</div><div class="phonetic">/ˈʌndəpɑːs/</div><div class="definition">地下通道</div><button class="speak-btn" onclick="speak('underpass')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="overpass"></div><div class="word">overpass</div><div class="phonetic">/ˈəʊvəpɑːs/</div><div class="definition">立交桥</div><button class="speak-btn" onclick="speak('overpass')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="flyover"></div><div class="word">flyover</div><div class="phonetic">/ˈflaɪəʊvə/</div><div class="definition">天桥</div><button class="speak-btn" onclick="speak('flyover')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="roundabout"></div><div class="word">roundabout</div><div class="phonetic">/ˈraʊndəbaʊt/</div><div class="definition">环岛</div><button class="speak-btn" onclick="speak('roundabout')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="intersection"></div><div class="word">intersection</div><div class="phonetic">/ˌɪntəˈsekʃən/</div><div class="definition">交汇点</div><button class="speak-btn" onclick="speak('intersection')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="junction"></div><div class="word">junction</div><div class="phonetic">/ˈdʒʌŋkʃən/</div><div class="definition">交叉口，岔道口</div><button class="speak-btn" onclick="speak('junction')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="lane"></div><div class="word">lane</div><div class="phonetic">/leɪn/</div><div class="definition">车道</div><button class="speak-btn" onclick="speak('lane')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="curve"></div><div class="word">curve</div><div class="phonetic">/kɜːv/</div><div class="definition">弯道</div><button class="speak-btn" onclick="speak('curve')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bend"></div><div class="word">bend</div><div class="phonetic">/bend/</div><div class="definition">弯道</div><button class="speak-btn" onclick="speak('bend')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="incline"></div><div class="word">incline</div><div class="phonetic">/ɪnˈklaɪn/</div><div class="definition">斜坡</div><button class="speak-btn" onclick="speak('incline')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="highway"></div><div class="word">highway</div><div class="phonetic">/ˈhaɪweɪ/</div><div class="definition">公路</div><button class="speak-btn" onclick="speak('highway')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="toll road"></div><div class="word">toll road</div><div class="phonetic">/təʊl rəʊd/</div><div class="definition">收费公路</div><button class="speak-btn" onclick="speak('toll road')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="scenic route"></div><div class="word">scenic route</div><div class="phonetic">/ˈsiːnɪk ruːt/</div><div class="definition">风景线</div><button class="speak-btn" onclick="speak('scenic route')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="coastal road"></div><div class="word">coastal road</div><div class="phonetic">/ˈkəʊstəl rəʊd/</div><div class="definition">沿海公路</div><button class="speak-btn" onclick="speak('coastal road')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="rural road"></div><div class="word">rural road</div><div class="phonetic">/ˈrʊərəl rəʊd/</div><div class="definition">乡村道路</div><button class="speak-btn" onclick="speak('rural road')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="country road"></div><div class="word">country road</div><div class="phonetic">/ˈkʌntri rəʊd/</div><div class="definition">乡村道路</div><button class="speak-btn" onclick="speak('country road')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mountain road"></div><div class="word">mountain road</div><div class="phonetic">/ˈmaʊntɪn rəʊd/</div><div class="definition">山路</div><button class="speak-btn" onclick="speak('mountain road')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 地理特征 24个 -->
+    <div class="section">
+      <h2 class="section-title">地理特征</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mountains"></div><div class="word">mountains</div><div class="phonetic">/ˈmaʊntɪnz/</div><div class="definition">山脉</div><button class="speak-btn" onclick="speak('mountains')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="river"></div><div class="word">river</div><div class="phonetic">/ˈrɪvə/</div><div class="definition">河流</div><button class="speak-btn" onclick="speak('river')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="stream"></div><div class="word">stream</div><div class="phonetic">/striːm/</div><div class="definition">小溪</div><button class="speak-btn" onclick="speak('stream')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="desert"></div><div class="word">desert</div><div class="phonetic">/ˈdezət/</div><div class="definition">沙漠</div><button class="speak-btn" onclick="speak('desert')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="forest"></div><div class="word">forest</div><div class="phonetic">/ˈfɒrɪst/</div><div class="definition">森林</div><button class="speak-btn" onclick="speak('forest')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="jungle"></div><div class="word">jungle</div><div class="phonetic">/ˈdʒʌŋɡəl/</div><div class="definition">丛林</div><button class="speak-btn" onclick="speak('jungle')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="valley"></div><div class="word">valley</div><div class="phonetic">/ˈvæli/</div><div class="definition">山谷</div><button class="speak-btn" onclick="speak('valley')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="village"></div><div class="word">village</div><div class="phonetic">/ˈvɪlɪdʒ/</div><div class="definition">村庄</div><button class="speak-btn" onclick="speak('village')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="plateau"></div><div class="word">plateau</div><div class="phonetic">/ˈplætəʊ/</div><div class="definition">高原</div><button class="speak-btn" onclick="speak('plateau')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="plateaus"></div><div class="word">plateaus</div><div class="phonetic">/ˈplætəʊz/</div><div class="definition">高原复数</div><button class="speak-btn" onclick="speak('plateaus')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="canyon"></div><div class="word">canyon</div><div class="phonetic">/ˈkænjən/</div><div class="definition">峡谷</div><button class="speak-btn" onclick="speak('canyon')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="gorge"></div><div class="word">gorge</div><div class="phonetic">/ɡɔːdʒ/</div><div class="definition">峡谷</div><button class="speak-btn" onclick="speak('gorge')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="ridge"></div><div class="word">ridge</div><div class="phonetic">/rɪdʒ/</div><div class="definition">山脊</div><button class="speak-btn" onclick="speak('ridge')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="peak"></div><div class="word">peak</div><div class="phonetic">/piːk/</div><div class="definition">山顶</div><button class="speak-btn" onclick="speak('peak')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="summit"></div><div class="word">summit</div><div class="phonetic">/ˈsʌmɪt/</div><div class="definition">山顶</div><button class="speak-btn" onclick="speak('summit')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="plain"></div><div class="word">plain</div><div class="phonetic">/pleɪn/</div><div class="definition">平原</div><button class="speak-btn" onclick="speak('plain')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="highland"></div><div class="word">highland</div><div class="phonetic">/ˈhaɪlənd/</div><div class="definition">高地</div><button class="speak-btn" onclick="speak('highland')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="highlands"></div><div class="word">highlands</div><div class="phonetic">/ˈhaɪləndz/</div><div class="definition">高地</div><button class="speak-btn" onclick="speak('highlands')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="lowlands"></div><div class="word">lowlands</div><div class="phonetic">/ˈləʊləndz/</div><div class="definition">低地</div><button class="speak-btn" onclick="speak('lowlands')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="wetland"></div><div class="word">wetland</div><div class="phonetic">/ˈwetlənd/</div><div class="definition">湿地</div><button class="speak-btn" onclick="speak('wetland')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="volcano"></div><div class="word">volcano</div><div class="phonetic">/vɒlˈkeɪnəʊ/</div><div class="definition">火山</div><button class="speak-btn" onclick="speak('volcano')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="cliff"></div><div class="word">cliff</div><div class="phonetic">/klɪf/</div><div class="definition">悬崖</div><button class="speak-btn" onclick="speak('cliff')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="heathland"></div><div class="word">heathland</div><div class="phonetic">/ˈhiːθlənd/</div><div class="definition">石楠荒原</div><button class="speak-btn" onclick="speak('heathland')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="moorland"></div><div class="word">moorland</div><div class="phonetic">/ˈmʊələnd/</div><div class="definition">高沼地</div><button class="speak-btn" onclick="speak('moorland')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 环境描述 15个 -->
+    <div class="section">
+      <h2 class="section-title">环境描述</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="remote"></div><div class="word">remote</div><div class="phonetic">/rɪˈməʊt/</div><div class="definition">偏远的</div><button class="speak-btn" onclick="speak('remote')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="isolated"></div><div class="word">isolated</div><div class="phonetic">/ˈaɪsəleɪtɪd/</div><div class="definition">与世隔绝的</div><button class="speak-btn" onclick="speak('isolated')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="scenic"></div><div class="word">scenic</div><div class="phonetic">/ˈsiːnɪk/</div><div class="definition">风景优美的</div><button class="speak-btn" onclick="speak('scenic')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="picturesque"></div><div class="word">picturesque</div><div class="phonetic">/ˌpɪktʃəˈresk/</div><div class="definition">风景如画的</div><button class="speak-btn" onclick="speak('picturesque')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="stunning"></div><div class="word">stunning</div><div class="phonetic">/ˈstʌnɪŋ/</div><div class="definition">极美的，令人惊艳的</div><button class="speak-btn" onclick="speak('stunning')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="gorgeous"></div><div class="word">gorgeous</div><div class="phonetic">/ˈɡɔːdʒəs/</div><div class="definition">华丽的，绚烂的</div><button class="speak-btn" onclick="speak('gorgeous')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="spectacular"></div><div class="word">spectacular</div><div class="phonetic">/spekˈtækjələ/</div><div class="definition">壮观的</div><button class="speak-btn" onclick="speak('spectacular')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="magnificent"></div><div class="word">magnificent</div><div class="phonetic">/mæɡˈnɪfɪsənt/</div><div class="definition">宏伟的，壮丽的</div><button class="speak-btn" onclick="speak('magnificent')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="majestic"></div><div class="word">majestic</div><div class="phonetic">/məˈdʒestɪk/</div><div class="definition">雄伟的，威严的</div><button class="speak-btn" onclick="speak('majestic')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="massive"></div><div class="word">massive</div><div class="phonetic">/ˈmæsɪv/</div><div class="definition">巨大的</div><button class="speak-btn" onclick="speak('massive')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="endless"></div><div class="word">endless</div><div class="phonetic">/ˈendləs/</div><div class="definition">无尽的</div><button class="speak-btn" onclick="speak('endless')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="vast"></div><div class="word">vast</div><div class="phonetic">/vɑːst/</div><div class="definition">巨大的，广大的</div><button class="speak-btn" onclick="speak('vast')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="fabulous"></div><div class="word">fabulous</div><div class="phonetic">/ˈfæbjələs/</div><div class="definition">极好的，绝妙的</div><button class="speak-btn" onclick="speak('fabulous')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="unreal"></div><div class="word">unreal</div><div class="phonetic">/ʌnˈrɪəl/</div><div class="definition">不真实的，太棒了</div><button class="speak-btn" onclick="speak('unreal')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="empty"></div><div class="word">empty</div><div class="phonetic">/ˈempti/</div><div class="definition">空的</div><button class="speak-btn" onclick="speak('empty')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 天气与氛围 10个 -->
+    <div class="section">
+      <h2 class="section-title">天气与氛围</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="crystal-clear"></div><div class="word">crystal-clear</div><div class="phonetic">/ˈkrɪstəl klɪə/</div><div class="definition">透明如水晶的</div><button class="speak-btn" onclick="speak('crystal-clear')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="misty"></div><div class="word">misty</div><div class="phonetic">/ˈmɪsti/</div><div class="definition">多雾的</div><button class="speak-btn" onclick="speak('misty')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="foggy"></div><div class="word">foggy</div><div class="phonetic">/ˈfɒɡi/</div><div class="definition">有雾的</div><button class="speak-btn" onclick="speak('foggy')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="refreshing"></div><div class="word">refreshing</div><div class="phonetic">/rɪˈfreʃɪŋ/</div><div class="definition">令人耳目一新的</div><button class="speak-btn" onclick="speak('refreshing')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="crisp"></div><div class="word">crisp</div><div class="phonetic">/krɪsp/</div><div class="definition">清新的，爽口的</div><button class="speak-btn" onclick="speak('crisp')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="peaceful"></div><div class="word">peaceful</div><div class="phonetic">/ˈpiːsfəl/</div><div class="definition">宁静的</div><button class="speak-btn" onclick="speak('peaceful')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tranquil"></div><div class="word">tranquil</div><div class="phonetic">/ˈtræŋkwɪl/</div><div class="definition">平静的，宁静的</div><button class="speak-btn" onclick="speak('tranquil')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="dusty"></div><div class="word">dusty</div><div class="phonetic">/ˈdʌsti/</div><div class="definition">满是灰尘的</div><button class="speak-btn" onclick="speak('dusty')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="climate"></div><div class="word">climate</div><div class="phonetic">/ˈklaɪmət/</div><div class="definition">气候</div><button class="speak-btn" onclick="speak('climate')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="weather"></div><div class="word">weather</div><div class="phonetic">/ˈweðə/</div><div class="definition">天气</div><button class="speak-btn" onclick="speak('weather')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 建筑与文化 4个 -->
+    <div class="section">
+      <h2 class="section-title">建筑与文化</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="temple"></div><div class="word">temple</div><div class="phonetic">/ˈtempəl/</div><div class="definition">庙宇</div><button class="speak-btn" onclick="speak('temple')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="pagoda"></div><div class="word">pagoda</div><div class="phonetic">/pəˈɡəʊdə/</div><div class="definition">佛塔</div><button class="speak-btn" onclick="speak('pagoda')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="courtyard house"></div><div class="word">courtyard house</div><div class="phonetic">/ˈkɔːtjɑːd haʊs/</div><div class="definition">庭院房屋</div><button class="speak-btn" onclick="speak('courtyard house')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="ancient town"></div><div class="word">ancient town</div><div class="phonetic">/ˈeɪnʃənt taʊn/</div><div class="definition">古镇</div><button class="speak-btn" onclick="speak('ancient town')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 积极情绪 9个 -->
+    <div class="section">
+      <h2 class="section-title">积极情绪</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="happy"></div><div class="word">happy</div><div class="phonetic">/ˈhæpi/</div><div class="definition">开心的</div><button class="speak-btn" onclick="speak('happy')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="grateful"></div><div class="word">grateful</div><div class="phonetic">/ˈɡreɪtfəl/</div><div class="definition">感激的</div><button class="speak-btn" onclick="speak('grateful')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="lucky"></div><div class="word">lucky</div><div class="phonetic">/ˈlʌki/</div><div class="definition">幸运的</div><button class="speak-btn" onclick="speak('lucky')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="awesome"></div><div class="word">awesome</div><div class="phonetic">/ˈɔːsəm/</div><div class="definition">超棒的</div><button class="speak-btn" onclick="speak('awesome')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="incredible"></div><div class="word">incredible</div><div class="phonetic">/ɪnˈkredəbəl/</div><div class="definition">不可思议的</div><button class="speak-btn" onclick="speak('incredible')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="fantastic"></div><div class="word">fantastic</div><div class="phonetic">/fænˈtæstɪk/</div><div class="definition">极好的</div><button class="speak-btn" onclick="speak('fantastic')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="thrilling"></div><div class="word">thrilling</div><div class="phonetic">/ˈθrɪlɪŋ/</div><div class="definition">令人激动的</div><button class="speak-btn" onclick="speak('thrilling')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="legend"></div><div class="word">legend</div><div class="phonetic">/ˈledʒənd/</div><div class="definition">传奇人物</div><button class="speak-btn" onclick="speak('legend')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="awe"></div><div class="word">awe</div><div class="phonetic">/ɔː/</div><div class="definition">敬畏</div><button class="speak-btn" onclick="speak('awe')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 挑战与困难 14个 -->
+    <div class="section">
+      <h2 class="section-title">挑战与困难</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tired"></div><div class="word">tired</div><div class="phonetic">/ˈtaɪəd/</div><div class="definition">累的</div><button class="speak-btn" onclick="speak('tired')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="exhausted"></div><div class="word">exhausted</div><div class="phonetic">/ɪɡˈzɔːstɪd/</div><div class="definition">筋疲力尽的</div><button class="speak-btn" onclick="speak('exhausted')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="exhausting"></div><div class="word">exhausting</div><div class="phonetic">/ɪɡˈzɔːstɪŋ/</div><div class="definition">使人筋疲力竭的</div><button class="speak-btn" onclick="speak('exhausting')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="challenging"></div><div class="word">challenging</div><div class="phonetic">/ˈtʃælɪndʒɪŋ/</div><div class="definition">有挑战性的</div><button class="speak-btn" onclick="speak('challenging')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tough"></div><div class="word">tough</div><div class="phonetic">/tʌf/</div><div class="definition">艰难的</div><button class="speak-btn" onclick="speak('tough')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="difficult"></div><div class="word">difficult</div><div class="phonetic">/ˈdɪfɪkəlt/</div><div class="definition">困难的</div><button class="speak-btn" onclick="speak('difficult')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="difficulty"></div><div class="word">difficulty</div><div class="phonetic">/ˈdɪfɪkəlti/</div><div class="definition">困难</div><button class="speak-btn" onclick="speak('difficulty')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="sketchy"></div><div class="word">sketchy</div><div class="phonetic">/ˈsketʃi/</div><div class="definition">惊险的/有点悬的</div><button class="speak-btn" onclick="speak('sketchy')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="nerve-wracking"></div><div class="word">nerve-wracking</div><div class="phonetic">/ˈnɜːv ˌrækɪŋ/</div><div class="definition">极端令人紧张的</div><button class="speak-btn" onclick="speak('nerve-wracking')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="shaky"></div><div class="word">shaky</div><div class="phonetic">/ˈʃeɪki/</div><div class="definition">颤抖的，不稳的</div><button class="speak-btn" onclick="speak('shaky')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="concerned"></div><div class="word">concerned</div><div class="phonetic">/kənˈsɜːnd/</div><div class="definition">担心的</div><button class="speak-btn" onclick="speak('concerned')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="stuck"></div><div class="word">stuck</div><div class="phonetic">/stʌk/</div><div class="definition">卡住的，困住的</div><button class="speak-btn" onclick="speak('stuck')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="madness"></div><div class="word">madness</div><div class="phonetic">/ˈmædnəs/</div><div class="definition">疯狂</div><button class="speak-btn" onclick="speak('madness')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="chaos"></div><div class="word">chaos</div><div class="phonetic">/ˈkeɪɒs/</div><div class="definition">混乱</div><button class="speak-btn" onclick="speak('chaos')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 状态描述 5个 -->
+    <div class="section">
+      <h2 class="section-title">状态描述</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mostly"></div><div class="word">mostly</div><div class="phonetic">/ˈməʊstli/</div><div class="definition">主要地，大部分</div><button class="speak-btn" onclick="speak('mostly')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="definitely"></div><div class="word">definitely</div><div class="phonetic">/ˈdefɪnətli/</div><div class="definition">肯定地</div><button class="speak-btn" onclick="speak('definitely')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="supposedly"></div><div class="word">supposedly</div><div class="phonetic">/səˈpəʊzɪdli/</div><div class="definition">据说</div><button class="speak-btn" onclick="speak('supposedly')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="actually"></div><div class="word">actually</div><div class="phonetic">/ˈæktʃuəli/</div><div class="definition">实际上</div><button class="speak-btn" onclick="speak('actually')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="basically"></div><div class="word">basically</div><div class="phonetic">/ˈbeɪsɪkli/</div><div class="definition">基本上</div><button class="speak-btn" onclick="speak('basically')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 边境与手续 6个 -->
+    <div class="section">
+      <h2 class="section-title">边境与手续</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="border"></div><div class="word">border</div><div class="phonetic">/ˈbɔːdə/</div><div class="definition">边境</div><button class="speak-btn" onclick="speak('border')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="visa"></div><div class="word">visa</div><div class="phonetic">/ˈviːzə/</div><div class="definition">签证</div><button class="speak-btn" onclick="speak('visa')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="checkpoint"></div><div class="word">checkpoint</div><div class="phonetic">/ˈtʃekpɔɪnt/</div><div class="definition">检查站</div><button class="speak-btn" onclick="speak('checkpoint')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="paperwork"></div><div class="word">paperwork</div><div class="phonetic">/ˈpeɪpəwɜːk/</div><div class="definition">文件/手续</div><button class="speak-btn" onclick="speak('paperwork')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="official"></div><div class="word">official</div><div class="phonetic">/əˈfɪʃəl/</div><div class="definition">官方的/官员</div><button class="speak-btn" onclick="speak('official')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="insurance"></div><div class="word">insurance</div><div class="phonetic">/ɪnˈʃʊərəns/</div><div class="definition">保险</div><button class="speak-btn" onclick="speak('insurance')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 住宿 12个 -->
+    <div class="section">
+      <h2 class="section-title">住宿</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="camping"></div><div class="word">camping</div><div class="phonetic">/ˈkæmpɪŋ/</div><div class="definition">露营</div><button class="speak-btn" onclick="speak('camping')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="wild camping"></div><div class="word">wild camping</div><div class="phonetic">/waɪld ˈkæmpɪŋ/</div><div class="definition">野外露营</div><button class="speak-btn" onclick="speak('wild camping')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tent"></div><div class="word">tent</div><div class="phonetic">/tent/</div><div class="definition">帐篷</div><button class="speak-btn" onclick="speak('tent')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="hotel"></div><div class="word">hotel</div><div class="phonetic">/həʊˈtel/</div><div class="definition">酒店</div><button class="speak-btn" onclick="speak('hotel')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="guesthouse"></div><div class="word">guesthouse</div><div class="phonetic">/ˈɡesthaʊs/</div><div class="definition">客栈</div><button class="speak-btn" onclick="speak('guesthouse')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="inn"></div><div class="word">inn</div><div class="phonetic">/ɪn/</div><div class="definition">小旅馆</div><button class="speak-btn" onclick="speak('inn')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="hostel"></div><div class="word">hostel</div><div class="phonetic">/ˈhɒstəl/</div><div class="definition">青年旅舍</div><button class="speak-btn" onclick="speak('hostel')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="lodge"></div><div class="word">lodge</div><div class="phonetic">/lɒdʒ/</div><div class="definition">客栈</div><button class="speak-btn" onclick="speak('lodge')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="homestay"></div><div class="word">homestay</div><div class="phonetic">/ˈhəʊmsteɪ/</div><div class="definition">家庭寄宿</div><button class="speak-btn" onclick="speak('homestay')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="campsite"></div><div class="word">campsite</div><div class="phonetic">/ˈkæmpsaɪt/</div><div class="definition">营地</div><button class="speak-btn" onclick="speak('campsite')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="camping ground"></div><div class="word">camping ground</div><div class="phonetic">/ˈkæmpɪŋ ɡraʊnd/</div><div class="definition">露营地</div><button class="speak-btn" onclick="speak('camping ground')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="shelter"></div><div class="word">shelter</div><div class="phonetic">/ˈʃeltə/</div><div class="definition">庇护所</div><button class="speak-btn" onclick="speak('shelter')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 补给与食物 12个 -->
+    <div class="section">
+      <h2 class="section-title">补给与食物</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="fuel"></div><div class="word">fuel</div><div class="phonetic">/ˈfjuːəl/</div><div class="definition">燃料</div><button class="speak-btn" onclick="speak('fuel')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="petrol"></div><div class="word">petrol</div><div class="phonetic">/ˈpetrəl/</div><div class="definition">汽油</div><button class="speak-btn" onclick="speak('petrol')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="gas"></div><div class="word">gas</div><div class="phonetic">/ɡæs/</div><div class="definition">汽油</div><button class="speak-btn" onclick="speak('gas')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tank"></div><div class="word">tank</div><div class="phonetic">/tæŋk/</div><div class="definition">油箱</div><button class="speak-btn" onclick="speak('tank')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bottle"></div><div class="word">bottle</div><div class="phonetic">/ˈbɒtəl/</div><div class="definition">瓶子</div><button class="speak-btn" onclick="speak('bottle')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="liter"></div><div class="word">liter</div><div class="phonetic">/ˈliːtə/</div><div class="definition">升</div><button class="speak-btn" onclick="speak('liter')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="food"></div><div class="word">food</div><div class="phonetic">/fuːd/</div><div class="definition">食物</div><button class="speak-btn" onclick="speak('food')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="snack"></div><div class="word">snack</div><div class="phonetic">/snæk/</div><div class="definition">零食，小吃</div><button class="speak-btn" onclick="speak('snack')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="street food"></div><div class="word">street food</div><div class="phonetic">/striːt fuːd/</div><div class="definition">街头小食</div><button class="speak-btn" onclick="speak('street food')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="barbecue"></div><div class="word">barbecue</div><div class="phonetic">/ˈbɑːbɪkjuː/</div><div class="definition">烧烤</div><button class="speak-btn" onclick="speak('barbecue')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="grill"></div><div class="word">grill</div><div class="phonetic">/ɡrɪl/</div><div class="definition">烧烤</div><button class="speak-btn" onclick="speak('grill')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="local specialty"></div><div class="word">local specialty</div><div class="phonetic">/ˈləʊkəl ˈspeʃəlti/</div><div class="definition">地方特产</div><button class="speak-btn" onclick="speak('local specialty')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 导航与方向 10个 -->
+    <div class="section">
+      <h2 class="section-title">导航与方向</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="destination"></div><div class="word">destination</div><div class="phonetic">/ˌdestɪˈneɪʃən/</div><div class="definition">目的地</div><button class="speak-btn" onclick="speak('destination')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="direction"></div><div class="word">direction</div><div class="phonetic">/dəˈrekʃən/</div><div class="definition">方向</div><button class="speak-btn" onclick="speak('direction')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="route"></div><div class="word">route</div><div class="phonetic">/ruːt/</div><div class="definition">路线</div><button class="speak-btn" onclick="speak('route')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="itinerary"></div><div class="word">itinerary</div><div class="phonetic">/aɪˈtɪnərəri/</div><div class="definition">行程</div><button class="speak-btn" onclick="speak('itinerary')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="guide"></div><div class="word">guide</div><div class="phonetic">/ɡaɪd/</div><div class="definition">向导，指南</div><button class="speak-btn" onclick="speak('guide')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="detour"></div><div class="word">detour</div><div class="phonetic">/ˈdiːtʊə/</div><div class="definition">绕行</div><button class="speak-btn" onclick="speak('detour')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="navigation"></div><div class="word">navigation</div><div class="phonetic">/ˌnævɪˈɡeɪʃən/</div><div class="definition">导航</div><button class="speak-btn" onclick="speak('navigation')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="elevation"></div><div class="word">elevation</div><div class="phonetic">/ˌeləˈveɪʃən/</div><div class="definition">海拔</div><button class="speak-btn" onclick="speak('elevation')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="altitude"></div><div class="word">altitude</div><div class="phonetic">/ˈæltɪtjuːd/</div><div class="definition">高度</div><button class="speak-btn" onclick="speak('altitude')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="high"></div><div class="word">high</div><div class="phonetic">/haɪ/</div><div class="definition">高的</div><button class="speak-btn" onclick="speak('high')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 人员 6个 -->
+    <div class="section">
+      <h2 class="section-title">人员</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="locals"></div><div class="word">locals</div><div class="phonetic">/ˈləʊkəlz/</div><div class="definition">当地人</div><button class="speak-btn" onclick="speak('locals')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="police"></div><div class="word">police</div><div class="phonetic">/pəˈliːs/</div><div class="definition">警察</div><button class="speak-btn" onclick="speak('police')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mechanic"></div><div class="word">mechanic</div><div class="phonetic">/məˈkænɪk/</div><div class="definition">机械工</div><button class="speak-btn" onclick="speak('mechanic')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="friendly"></div><div class="word">friendly</div><div class="phonetic">/ˈfrendli/</div><div class="definition">友好的</div><button class="speak-btn" onclick="speak('friendly')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="welcoming"></div><div class="word">welcoming</div><div class="phonetic">/ˈwelkəmɪŋ/</div><div class="definition">热情好客的</div><button class="speak-btn" onclick="speak('welcoming')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="curious"></div><div class="word">curious</div><div class="phonetic">/ˈkjʊəriəs/</div><div class="definition">好奇的</div><button class="speak-btn" onclick="speak('curious')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 车辆部件 15个 -->
+    <div class="section">
+      <h2 class="section-title">车辆部件</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="engine"></div><div class="word">engine</div><div class="phonetic">/ˈendʒɪn/</div><div class="definition">引擎</div><button class="speak-btn" onclick="speak('engine')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tire"></div><div class="word">tire</div><div class="phonetic">/ˈtaɪə/</div><div class="definition">轮胎</div><button class="speak-btn" onclick="speak('tire')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tyre"></div><div class="word">tyre</div><div class="phonetic">/ˈtaɪə/</div><div class="definition">轮胎，英式拼写</div><button class="speak-btn" onclick="speak('tyre')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="wheel"></div><div class="word">wheel</div><div class="phonetic">/wiːl/</div><div class="definition">车轮</div><button class="speak-btn" onclick="speak('wheel')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="wheeler"></div><div class="word">wheeler</div><div class="phonetic">/ˈwiːlə/</div><div class="definition">轮车</div><button class="speak-btn" onclick="speak('wheeler')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="brakes"></div><div class="word">brakes</div><div class="phonetic">/breɪks/</div><div class="definition">刹车</div><button class="speak-btn" onclick="speak('brakes')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="brake"></div><div class="word">brake</div><div class="phonetic">/breɪk/</div><div class="definition">刹车</div><button class="speak-btn" onclick="speak('brake')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="clutch"></div><div class="word">clutch</div><div class="phonetic">/klʌtʃ/</div><div class="definition">离合器</div><button class="speak-btn" onclick="speak('clutch')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="clutch lever"></div><div class="word">clutch lever</div><div class="phonetic">/klʌtʃ ˈliːvə/</div><div class="definition">离合器操纵杆</div><button class="speak-btn" onclick="speak('clutch lever')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="gear"></div><div class="word">gear</div><div class="phonetic">/ɡɪə/</div><div class="definition">排挡，齿轮</div><button class="speak-btn" onclick="speak('gear')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="sixth"></div><div class="word">sixth</div><div class="phonetic">/sɪksθ/</div><div class="definition">六档</div><button class="speak-btn" onclick="speak('sixth')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="suspension"></div><div class="word">suspension</div><div class="phonetic">/səˈspenʃən/</div><div class="definition">悬架</div><button class="speak-btn" onclick="speak('suspension')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="helmet"></div><div class="word">helmet</div><div class="phonetic">/ˈhelmət/</div><div class="definition">头盔</div><button class="speak-btn" onclick="speak('helmet')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="boot"></div><div class="word">boot</div><div class="phonetic">/buːt/</div><div class="definition">靴子</div><button class="speak-btn" onclick="speak('boot')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="luggage"></div><div class="word">luggage</div><div class="phonetic">/ˈlʌɡɪdʒ/</div><div class="definition">行李</div><button class="speak-btn" onclick="speak('luggage')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 维修与保养 14个 -->
+    <div class="section">
+      <h2 class="section-title">维修与保养</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="fix"></div><div class="word">fix</div><div class="phonetic">/fɪks/</div><div class="definition">修理</div><button class="speak-btn" onclick="speak('fix')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="repair"></div><div class="word">repair</div><div class="phonetic">/rɪˈpeə/</div><div class="definition">修理</div><button class="speak-btn" onclick="speak('repair')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="puncture"></div><div class="word">puncture</div><div class="phonetic">/ˈpʌŋktʃə/</div><div class="definition">扎胎</div><button class="speak-btn" onclick="speak('puncture')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="flat tire"></div><div class="word">flat tire</div><div class="phonetic">/flæt ˈtaɪə/</div><div class="definition">轮胎没气</div><button class="speak-btn" onclick="speak('flat tire')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tools"></div><div class="word">tools</div><div class="phonetic">/tuːlz/</div><div class="definition">工具</div><button class="speak-btn" onclick="speak('tools')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="spares"></div><div class="word">spares</div><div class="phonetic">/speəz/</div><div class="definition">备件</div><button class="speak-btn" onclick="speak('spares')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="spare parts"></div><div class="word">spare parts</div><div class="phonetic">/speə pɑːts/</div><div class="definition">备件</div><button class="speak-btn" onclick="speak('spare parts')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="spare"></div><div class="word">spare</div><div class="phonetic">/speə/</div><div class="definition">备用的</div><button class="speak-btn" onclick="speak('spare')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="assembly"></div><div class="word">assembly</div><div class="phonetic">/əˈsembli/</div><div class="definition">装配</div><button class="speak-btn" onclick="speak('assembly')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mount"></div><div class="word">mount</div><div class="phonetic">/maʊnt/</div><div class="definition">安装</div><button class="speak-btn" onclick="speak('mount')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="filter"></div><div class="word">filter</div><div class="phonetic">/ˈfɪltə/</div><div class="definition">过滤器</div><button class="speak-btn" onclick="speak('filter')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="sensor"></div><div class="word">sensor</div><div class="phonetic">/ˈsensə/</div><div class="definition">传感器</div><button class="speak-btn" onclick="speak('sensor')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="metal"></div><div class="word">metal</div><div class="phonetic">/ˈmetəl/</div><div class="definition">金属</div><button class="speak-btn" onclick="speak('metal')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tiny"></div><div class="word">tiny</div><div class="phonetic">/ˈtaɪni/</div><div class="definition">极小的</div><button class="speak-btn" onclick="speak('tiny')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 故障与问题 10个 -->
+    <div class="section">
+      <h2 class="section-title">故障与问题</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="breakdown"></div><div class="word">breakdown</div><div class="phonetic">/ˈbreɪkdaʊn/</div><div class="definition">故障</div><button class="speak-btn" onclick="speak('breakdown')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="crash"></div><div class="word">crash</div><div class="phonetic">/kræʃ/</div><div class="definition">撞车</div><button class="speak-btn" onclick="speak('crash')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="burnt"></div><div class="word">burnt</div><div class="phonetic">/bɜːnt/</div><div class="definition">烧坏的</div><button class="speak-btn" onclick="speak('burnt')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="ripped"></div><div class="word">ripped</div><div class="phonetic">/rɪpt/</div><div class="definition">撕裂的</div><button class="speak-btn" onclick="speak('ripped')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="abandoned"></div><div class="word">abandoned</div><div class="phonetic">/əˈbændənd/</div><div class="definition">被抛弃的</div><button class="speak-btn" onclick="speak('abandoned')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="incident"></div><div class="word">incident</div><div class="phonetic">/ˈɪnsɪdənt/</div><div class="definition">事件</div><button class="speak-btn" onclick="speak('incident')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="failure"></div><div class="word">failure</div><div class="phonetic">/ˈfeɪljə/</div><div class="definition">故障</div><button class="speak-btn" onclick="speak('failure')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="wobbling"></div><div class="word">wobbling</div><div class="phonetic">/ˈwɒblɪŋ/</div><div class="definition">摇摆</div><button class="speak-btn" onclick="speak('wobbling')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="vibrating"></div><div class="word">vibrating</div><div class="phonetic">/vaɪˈbreɪtɪŋ/</div><div class="definition">振动</div><button class="speak-btn" onclick="speak('vibrating')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="inward"></div><div class="word">inward</div><div class="phonetic">/ˈɪnwəd/</div><div class="definition">向内的</div><button class="speak-btn" onclick="speak('inward')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 设备与配件 4个 -->
+    <div class="section">
+      <h2 class="section-title">设备与配件</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="gear"></div><div class="word">gear</div><div class="phonetic">/ɡɪə/</div><div class="definition">装备</div><button class="speak-btn" onclick="speak('gear')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="drone"></div><div class="word">drone</div><div class="phonetic">/drəʊn/</div><div class="definition">无人机</div><button class="speak-btn" onclick="speak('drone')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tablet"></div><div class="word">tablet</div><div class="phonetic">/ˈtæblət/</div><div class="definition">平板电脑</div><button class="speak-btn" onclick="speak('tablet')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="transportation"></div><div class="word">transportation</div><div class="phonetic">/ˌtrænspɔːˈteɪʃən/</div><div class="definition">交通工具</div><button class="speak-btn" onclick="speak('transportation')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 具体动词 22个 -->
+    <div class="section">
+      <h2 class="section-title">具体动词</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="navigate"></div><div class="word">navigate</div><div class="phonetic">/ˈnævɪɡeɪt/</div><div class="definition">导航/找路</div><button class="speak-btn" onclick="speak('navigate')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="manage"></div><div class="word">manage</div><div class="phonetic">/ˈmænɪdʒ/</div><div class="definition">设法完成/处理</div><button class="speak-btn" onclick="speak('manage')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="handle"></div><div class="word">handle</div><div class="phonetic">/ˈhændəl/</div><div class="definition">操控/应对</div><button class="speak-btn" onclick="speak('handle')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="struggle"></div><div class="word">struggle</div><div class="phonetic">/ˈstrʌɡəl/</div><div class="definition">挣扎/费力</div><button class="speak-btn" onclick="speak('struggle')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="explore"></div><div class="word">explore</div><div class="phonetic">/ɪkˈsplɔː/</div><div class="definition">探索</div><button class="speak-btn" onclick="speak('explore')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="continue"></div><div class="word">continue</div><div class="phonetic">/kənˈtɪnjuː/</div><div class="definition">继续</div><button class="speak-btn" onclick="speak('continue')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="cross"></div><div class="word">cross</div><div class="phonetic">/krɒs/</div><div class="definition">穿过/跨越</div><button class="speak-btn" onclick="speak('cross')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="across"></div><div class="word">across</div><div class="phonetic">/əˈkrɒs/</div><div class="definition">穿过</div><button class="speak-btn" onclick="speak('across')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="push"></div><div class="word">push</div><div class="phonetic">/pʊʃ/</div><div class="definition">推</div><button class="speak-btn" onclick="speak('push')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="figure out"></div><div class="word">figure out</div><div class="phonetic">/ˈfɪɡə aʊt/</div><div class="definition">搞明白/想办法</div><button class="speak-btn" onclick="speak('figure out')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="capture"></div><div class="word">capture</div><div class="phonetic">/ˈkæptʃə/</div><div class="definition">拍摄，录制</div><button class="speak-btn" onclick="speak('capture')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="shoot"></div><div class="word">shoot</div><div class="phonetic">/ʃuːt/</div><div class="definition">拍摄</div><button class="speak-btn" onclick="speak('shoot')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="arrange"></div><div class="word">arrange</div><div class="phonetic">/əˈreɪndʒ/</div><div class="definition">安排</div><button class="speak-btn" onclick="speak('arrange')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="organize"></div><div class="word">organize</div><div class="phonetic">/ˈɔːɡənaɪz/</div><div class="definition">组织</div><button class="speak-btn" onclick="speak('organize')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="preserve"></div><div class="word">preserve</div><div class="phonetic">/prɪˈzɜːv/</div><div class="definition">保护，维护</div><button class="speak-btn" onclick="speak('preserve')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="originate"></div><div class="word">originate</div><div class="phonetic">/əˈrɪdʒɪneɪt/</div><div class="definition">起源，产生</div><button class="speak-btn" onclick="speak('originate')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="confront"></div><div class="word">confront</div><div class="phonetic">/kənˈfrʌnt/</div><div class="definition">面对，正视</div><button class="speak-btn" onclick="speak('confront')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bash"></div><div class="word">bash</div><div class="phonetic">/bæʃ/</div><div class="definition">猛击</div><button class="speak-btn" onclick="speak('bash')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="splash"></div><div class="word">splash</div><div class="phonetic">/splæʃ/</div><div class="definition">溅洒</div><button class="speak-btn" onclick="speak('splash')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="pile"></div><div class="word">pile</div><div class="phonetic">/paɪl/</div><div class="definition">堆积</div><button class="speak-btn" onclick="speak('pile')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="stick"></div><div class="word">stick</div><div class="phonetic">/stɪk/</div><div class="definition">粘贴，坚持</div><button class="speak-btn" onclick="speak('stick')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tuned"></div><div class="word">tuned</div><div class="phonetic">/tjuːnd/</div><div class="definition">调好的</div><button class="speak-btn" onclick="speak('tuned')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 旅行安排 3个 -->
+    <div class="section">
+      <h2 class="section-title">旅行安排</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="set up"></div><div class="word">set up</div><div class="phonetic">/set ʌp/</div><div class="definition">搭建/设置</div><button class="speak-btn" onclick="speak('set up')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="pack"></div><div class="word">pack</div><div class="phonetic">/pæk/</div><div class="definition">打包</div><button class="speak-btn" onclick="speak('pack')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="progress"></div><div class="word">progress</div><div class="phonetic">/ˈprəʊɡres/</div><div class="definition">进步，前进</div><button class="speak-btn" onclick="speak('progress')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 摄影相关 5个 -->
+    <div class="section">
+      <h2 class="section-title">摄影相关</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="aerial view"></div><div class="word">aerial view</div><div class="phonetic">/ˈeəriəl vjuː/</div><div class="definition">航拍视角</div><button class="speak-btn" onclick="speak('aerial view')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="shot"></div><div class="word">shot</div><div class="phonetic">/ʃɒt/</div><div class="definition">镜头</div><button class="speak-btn" onclick="speak('shot')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="frame"></div><div class="word">frame</div><div class="phonetic">/freɪm/</div><div class="definition">画面</div><button class="speak-btn" onclick="speak('frame')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="angle"></div><div class="word">angle</div><div class="phonetic">/ˈæŋɡəl/</div><div class="definition">角度</div><button class="speak-btn" onclick="speak('angle')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="episode"></div><div class="word">episode</div><div class="phonetic">/ˈepɪsəʊd/</div><div class="definition">集，一段经历</div><button class="speak-btn" onclick="speak('episode')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 核心理念 7个 -->
+    <div class="section">
+      <h2 class="section-title">核心理念</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="adventure"></div><div class="word">adventure</div><div class="phonetic">/ədˈventʃə/</div><div class="definition">冒险</div><button class="speak-btn" onclick="speak('adventure')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="freedom"></div><div class="word">freedom</div><div class="phonetic">/ˈfriːdəm/</div><div class="definition">自由</div><button class="speak-btn" onclick="speak('freedom')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="journey"></div><div class="word">journey</div><div class="phonetic">/ˈdʒɜːni/</div><div class="definition">旅程</div><button class="speak-btn" onclick="speak('journey')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="experience"></div><div class="word">experience</div><div class="phonetic">/ɪkˈspɪəriəns/</div><div class="definition">经历/体验</div><button class="speak-btn" onclick="speak('experience')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="challenge"></div><div class="word">challenge</div><div class="phonetic">/ˈtʃælɪndʒ/</div><div class="definition">挑战</div><button class="speak-btn" onclick="speak('challenge')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="potential"></div><div class="word">potential</div><div class="phonetic">/pəˈtenʃəl/</div><div class="definition">潜力</div><button class="speak-btn" onclick="speak('potential')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="harmony"></div><div class="word">harmony</div><div class="phonetic">/ˈhɑːməni/</div><div class="definition">和谐</div><button class="speak-btn" onclick="speak('harmony')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 人文品质 7个 -->
+    <div class="section">
+      <h2 class="section-title">人文品质</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="patience"></div><div class="word">patience</div><div class="phonetic">/ˈpeɪʃəns/</div><div class="definition">耐心</div><button class="speak-btn" onclick="speak('patience')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="kindness"></div><div class="word">kindness</div><div class="phonetic">/ˈkaɪndnəs/</div><div class="definition">善良</div><button class="speak-btn" onclick="speak('kindness')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="hospitality"></div><div class="word">hospitality</div><div class="phonetic">/ˌhɒspɪˈtæləti/</div><div class="definition">好客</div><button class="speak-btn" onclick="speak('hospitality')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="perseverance"></div><div class="word">perseverance</div><div class="phonetic">/ˌpɜːsɪˈvɪərəns/</div><div class="definition">毅力</div><button class="speak-btn" onclick="speak('perseverance')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="sincerity"></div><div class="word">sincerity</div><div class="phonetic">/sɪnˈserəti/</div><div class="definition">真诚</div><button class="speak-btn" onclick="speak('sincerity')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="faith"></div><div class="word">faith</div><div class="phonetic">/feɪθ/</div><div class="definition">信念</div><button class="speak-btn" onclick="speak('faith')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="alienation"></div><div class="word">alienation</div><div class="phonetic">/ˌeɪliəˈneɪʃən/</div><div class="definition">疏离感</div><button class="speak-btn" onclick="speak('alienation')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 特殊概念 6个 -->
+    <div class="section">
+      <h2 class="section-title">特殊概念</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="tourism"></div><div class="word">tourism</div><div class="phonetic">/ˈtʊərɪzəm/</div><div class="definition">旅游业</div><button class="speak-btn" onclick="speak('tourism')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="hardcore"></div><div class="word">hardcore</div><div class="phonetic">/ˈhɑːdkɔː/</div><div class="definition">硬核的</div><button class="speak-btn" onclick="speak('hardcore')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="wild"></div><div class="word">wild</div><div class="phonetic">/waɪld/</div><div class="definition">野生的，狂野的</div><button class="speak-btn" onclick="speak('wild')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="roaming"></div><div class="word">roaming</div><div class="phonetic">/ˈrəʊmɪŋ/</div><div class="definition">漫游</div><button class="speak-btn" onclick="speak('roaming')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="scottish"></div><div class="word">scottish</div><div class="phonetic">/ˈskɒtɪʃ/</div><div class="definition">苏格兰的</div><button class="speak-btn" onclick="speak('scottish')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="jurassic"></div><div class="word">jurassic</div><div class="phonetic">/dʒʊˈræsɪk/</div><div class="definition">侏罗纪的</div><button class="speak-btn" onclick="speak('jurassic')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 过渡连接词 8个 -->
+    <div class="section">
+      <h2 class="section-title">过渡连接词（让表达流畅自然）</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="so"></div><div class="word">so</div><div class="phonetic">/səʊ/</div><div class="definition">所以，那么</div><button class="speak-btn" onclick="speak('so')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="anyway"></div><div class="word">anyway</div><div class="phonetic">/ˈeniweɪ/</div><div class="definition">总之，不管怎样</div><button class="speak-btn" onclick="speak('anyway')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="well"></div><div class="word">well</div><div class="phonetic">/wel/</div><div class="definition">嗯</div><button class="speak-btn" onclick="speak('well')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="right"></div><div class="word">right</div><div class="phonetic">/raɪt/</div><div class="definition">好了，行</div><button class="speak-btn" onclick="speak('right')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="you know"></div><div class="word">you know</div><div class="phonetic">/juː nəʊ/</div><div class="definition">你知道的</div><button class="speak-btn" onclick="speak('you know')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="i mean"></div><div class="word">i mean</div><div class="phonetic">/aɪ miːn/</div><div class="definition">我的意思是</div><button class="speak-btn" onclick="speak('i mean')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="like"></div><div class="word">like</div><div class="phonetic">/laɪk/</div><div class="definition">就像是</div><button class="speak-btn" onclick="speak('like')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="uhm"></div><div class="word">uhm</div><div class="phonetic">/ʌm/</div><div class="definition">思考停顿声</div><button class="speak-btn" onclick="speak('uhm')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="err"></div><div class="word">err</div><div class="phonetic">/ɜː/</div><div class="definition">思考停顿声</div><button class="speak-btn" onclick="speak('err')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mmm"></div><div class="word">mmm</div><div class="phonetic">/mː/</div><div class="definition">思考停顿声</div><button class="speak-btn" onclick="speak('mmm')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 动词短语 8个 -->
+    <div class="section">
+      <h2 class="section-title">动词短语（地道英语关键）</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="give up"></div><div class="word">give up</div><div class="phonetic">/ɡɪv ʌp/</div><div class="definition">放弃</div><button class="speak-btn" onclick="speak('give up')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="end up"></div><div class="word">end up</div><div class="phonetic">/end ʌp/</div><div class="definition">结果是，最终</div><button class="speak-btn" onclick="speak('end up')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="run out of"></div><div class="word">run out of</div><div class="phonetic">/rʌn aʊt əv/</div><div class="definition">用完了</div><button class="speak-btn" onclick="speak('run out of')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="look forward to"></div><div class="word">look forward to</div><div class="phonetic">/lʊk ˈfɔːwəd tuː/</div><div class="definition">期待</div><button class="speak-btn" onclick="speak('look forward to')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="carry on"></div><div class="word">carry on</div><div class="phonetic">/ˈkæri ɒn/</div><div class="definition">继续</div><button class="speak-btn" onclick="speak('carry on')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="keep on"></div><div class="word">keep on</div><div class="phonetic">/kiːp ɒn/</div><div class="definition">继续</div><button class="speak-btn" onclick="speak('keep on')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="go back"></div><div class="word">go back</div><div class="phonetic">/ɡəʊ bæk/</div><div class="definition">回去</div><button class="speak-btn" onclick="speak('go back')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 感叹与强调 2个 -->
+    <div class="section">
+      <h2 class="section-title">感叹与强调</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="heck"></div><div class="word">heck</div><div class="phonetic">/hek/</div><div class="definition">感叹词</div><button class="speak-btn" onclick="speak('heck')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="impeccable"></div><div class="word">impeccable</div><div class="phonetic">/ɪmˈpekəbəl/</div><div class="definition">无瑕疵的</div><button class="speak-btn" onclick="speak('impeccable')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 特定场景词汇 8个 -->
+    <div class="section">
+      <h2 class="section-title">特定场景词汇</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="stuff"></div><div class="word">stuff</div><div class="phonetic">/stʌf/</div><div class="definition">东西，物品</div><button class="speak-btn" onclick="speak('stuff')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="random"></div><div class="word">random</div><div class="phonetic">/ˈrændəm/</div><div class="definition">随意的，胡乱的</div><button class="speak-btn" onclick="speak('random')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="extra"></div><div class="word">extra</div><div class="phonetic">/ˈekstrə/</div><div class="definition">额外的</div><button class="speak-btn" onclick="speak('extra')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="dust"></div><div class="word">dust</div><div class="phonetic">/dʌst/</div><div class="definition">灰尘</div><button class="speak-btn" onclick="speak('dust')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="fumes"></div><div class="word">fumes</div><div class="phonetic">/fjuːmz/</div><div class="definition">烟气</div><button class="speak-btn" onclick="speak('fumes')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="stretch"></div><div class="word">stretch</div><div class="phonetic">/stretʃ/</div><div class="definition">路段</div><button class="speak-btn" onclick="speak('stretch')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="coal"></div><div class="word">coal</div><div class="phonetic">/kəʊl/</div><div class="definition">煤</div><button class="speak-btn" onclick="speak('coal')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="premium"></div><div class="word">premium</div><div class="phonetic">/ˈpriːmiəm/</div><div class="definition">保险费，高级的</div><button class="speak-btn" onclick="speak('premium')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 动物与自然 9个 -->
+    <div class="section">
+      <h2 class="section-title">动物与自然</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="camels"></div><div class="word">camels</div><div class="phonetic">/ˈkæməlz/</div><div class="definition">骆驼</div><button class="speak-btn" onclick="speak('camels')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="deer"></div><div class="word">deer</div><div class="phonetic">/dɪə/</div><div class="definition">鹿</div><button class="speak-btn" onclick="speak('deer')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bushbuck"></div><div class="word">bushbuck</div><div class="phonetic">/ˈbʊʃbʌk/</div><div class="definition">羚羊</div><button class="speak-btn" onclick="speak('bushbuck')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="cow"></div><div class="word">cow</div><div class="phonetic">/kaʊ/</div><div class="definition">母牛</div><button class="speak-btn" onclick="speak('cow')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="dinosaurs"></div><div class="word">dinosaurs</div><div class="phonetic">/ˈdaɪnəsɔːz/</div><div class="definition">恐龙</div><button class="speak-btn" onclick="speak('dinosaurs')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="apricots"></div><div class="word">apricots</div><div class="phonetic">/ˈeɪprɪkɒts/</div><div class="definition">杏子</div><button class="speak-btn" onclick="speak('apricots')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="bush"></div><div class="word">bush</div><div class="phonetic">/bʊʃ/</div><div class="definition">灌木</div><button class="speak-btn" onclick="speak('bush')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="caves"></div><div class="word">caves</div><div class="phonetic">/keɪvz/</div><div class="definition">洞穴</div><button class="speak-btn" onclick="speak('caves')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="ancestors"></div><div class="word">ancestors</div><div class="phonetic">/ˈænsestəz/</div><div class="definition">祖先</div><button class="speak-btn" onclick="speak('ancestors')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 特殊状态 4个 -->
+    <div class="section">
+      <h2 class="section-title">特殊状态</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="inaudible"></div><div class="word">inaudible</div><div class="phonetic">/ɪnˈɔːdəbəl/</div><div class="definition">听不见的</div><button class="speak-btn" onclick="speak('inaudible')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="sacked"></div><div class="word">sacked</div><div class="phonetic">/sækt/</div><div class="definition">解雇</div><button class="speak-btn" onclick="speak('sacked')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="thunderstorm"></div><div class="word">thunderstorm</div><div class="phonetic">/ˈθʌndəstɔːm/</div><div class="definition">雷雨</div><button class="speak-btn" onclick="speak('thunderstorm')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="hilly"></div><div class="word">hilly</div><div class="phonetic">/ˈhɪli/</div><div class="definition">多山丘的</div><button class="speak-btn" onclick="speak('hilly')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 建筑与设施 5个 -->
+    <div class="section">
+      <h2 class="section-title">建筑与设施</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="pole"></div><div class="word">pole</div><div class="phonetic">/pəʊl/</div><div class="definition">杆子</div><button class="speak-btn" onclick="speak('pole')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="fencing"></div><div class="word">fencing</div><div class="phonetic">/ˈfensɪŋ/</div><div class="definition">围栏</div><button class="speak-btn" onclick="speak('fencing')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="electricity"></div><div class="word">electricity</div><div class="phonetic">/ɪˌlekˈtrɪsəti/</div><div class="definition">电力</div><button class="speak-btn" onclick="speak('electricity')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="rural"></div><div class="word">rural</div><div class="phonetic">/ˈrʊərəl/</div><div class="definition">农村的</div><button class="speak-btn" onclick="speak('rural')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="flap"></div><div class="word">flap</div><div class="phonetic">/flæp/</div><div class="definition">片状悬垂物</div><button class="speak-btn" onclick="speak('flap')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 其他实用词汇 6个 -->
+    <div class="section">
+      <h2 class="section-title">其他实用词汇</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="translation"></div><div class="word">translation</div><div class="phonetic">/trænsˈleɪʃən/</div><div class="definition">翻译</div><button class="speak-btn" onclick="speak('translation')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="parcel"></div><div class="word">parcel</div><div class="phonetic">/ˈpɑːsəl/</div><div class="definition">包裹</div><button class="speak-btn" onclick="speak('parcel')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="dealership"></div><div class="word">dealership</div><div class="phonetic">/ˈdiːləʃɪp/</div><div class="definition">经销商</div><button class="speak-btn" onclick="speak('dealership')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="thumb"></div><div class="word">thumb</div><div class="phonetic">/θʌm/</div><div class="definition">拇指</div><button class="speak-btn" onclick="speak('thumb')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="duplicate"></div><div class="word">duplicate</div><div class="phonetic">/ˈdjuːplɪkət/</div><div class="definition">复制</div><button class="speak-btn" onclick="speak('duplicate')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="dessert"></div><div class="word">dessert</div><div class="phonetic">/dɪˈzɜːt/</div><div class="definition">甜点</div><button class="speak-btn" onclick="speak('dessert')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+    <!-- 地名与国家 6个 -->
+    <div class="section">
+      <h2 class="section-title">地名与国家</h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="scotland"></div><div class="word">scotland</div><div class="phonetic">/ˈskɒtlənd/</div><div class="definition">苏格兰</div><button class="speak-btn" onclick="speak('scotland')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="luxembourg"></div><div class="word">luxembourg</div><div class="phonetic">/ˈlʌksəmbɜːɡ/</div><div class="definition">卢森堡</div><button class="speak-btn" onclick="speak('luxembourg')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="liechtenstein"></div><div class="word">liechtenstein</div><div class="phonetic">/ˈlɪktənstaɪn/</div><div class="definition">列支敦士登</div><button class="speak-btn" onclick="speak('liechtenstein')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="lithuania"></div><div class="word">lithuania</div><div class="phonetic">/ˌlɪθjuˈeɪniə/</div><div class="definition">立陶宛</div><button class="speak-btn" onclick="speak('lithuania')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="latvia"></div><div class="word">latvia</div><div class="phonetic">/ˈlætviə/</div><div class="definition">拉脱维亚</div><button class="speak-btn" onclick="speak('latvia')" title="发音">🔊</button></div></div>
+        <div class="card"><div class="card-content"><div class="status-indicator default" onclick="toggleStatus(this)" title="未标记" data-word="mingsha"></div><div class="word">mingsha</div><div class="phonetic">/ˈmɪŋʃɑː/</div><div class="definition">鸣沙</div><button class="speak-btn" onclick="speak('mingsha')" title="发音">🔊</button></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// 本地存储功能
+function saveStatus() {
+  const statusData = {};
+  document.querySelectorAll('.status-indicator').forEach(indicator => {
+    const word = indicator.dataset.word;
+    const status = Array.from(indicator.classList).find(cls => 
+      ['default', 'unknown', 'learning', 'mastered'].includes(cls)
+    );
+    if (status && status !== 'default' && word) {
+      statusData[word] = status;
+    }
+  });
+  localStorage.setItem('motorcycleVocabStatus', JSON.stringify(statusData));
+}
+
+function loadStatus() {
+  try {
+    const statusData = JSON.parse(localStorage.getItem('motorcycleVocabStatus') || '{}');
+    Object.entries(statusData).forEach(([word, status]) => {
+      const indicator = document.querySelector(`[data-word="${word}"]`);
+      if (indicator) {
+        // 移除所有状态类
+        indicator.classList.remove('default', 'unknown', 'learning', 'mastered');
+        // 添加保存的状态
+        indicator.classList.add(status);
+        // 更新title
+        const statusNames = {
+          'default': '未标记',
+          'unknown': '陌生', 
+          'learning': '学习中',
+          'mastered': '掌握'
+        };
+        indicator.title = statusNames[status];
+      }
+    });
+  } catch (e) {
+    console.log('加载状态失败:', e);
+  }
+}
+
+// 原有的发音功能（保持不变）
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.8;
+  utterance.pitch = 1;
+  speechSynthesis.speak(utterance);
+}
+
+// 原有的状态切换功能（添加保存功能）
+function toggleStatus(element) {
+  const statuses = ['default', 'unknown', 'learning', 'mastered'];
+  const statusNames = ['未标记', '陌生', '学习中', '掌握'];
+  
+  let currentIndex = 0;
+  for (let i = 0; i < statuses.length; i++) {
+    if (element.classList.contains(statuses[i])) {
+      currentIndex = i;
+      element.classList.remove(statuses[i]);
+      break;
+    }
+  }
+  
+  const nextIndex = (currentIndex + 1) % statuses.length;
+  element.classList.add(statuses[nextIndex]);
+  element.title = statusNames[nextIndex];
+  
+  // 添加保存功能
+  saveStatus();
+}
+
+// 页面加载完成后加载状态
+document.addEventListener('DOMContentLoaded', function() {
+  loadStatus();
+});
+</script>
+</body>
+</html>
+
+<script>
+// 本地存储功能
+function saveStatus() {
+  const statusData = {};
+  document.querySelectorAll('.status-indicator').forEach(indicator => {
+    const word = indicator.dataset.word;
+    const status = Array.from(indicator.classList).find(cls => 
+      ['default', 'unknown', 'learning', 'mastered'].includes(cls)
+    );
+    if (status && status !== 'default' && word) {
+      statusData[word] = status;
+    }
+  });
+  localStorage.setItem('motorcycleVocabStatus', JSON.stringify(statusData));
+}
+
+function loadStatus() {
+  try {
+    const statusData = JSON.parse(localStorage.getItem('motorcycleVocabStatus') || '{}');
+    Object.entries(statusData).forEach(([word, status]) => {
+      const indicator = document.querySelector(`[data-word="${word}"]`);
+      if (indicator) {
+        // 移除所有状态类
+        indicator.classList.remove('default', 'unknown', 'learning', 'mastered');
+        // 添加保存的状态
+        indicator.classList.add(status);
+        // 更新title
+        const statusNames = {
+          'default': '未标记',
+          'unknown': '陌生', 
+          'learning': '学习中',
+          'mastered': '掌握'
+        };
+        indicator.title = statusNames[status];
+      }
+    });
+  } catch (e) {
+    console.log('加载状态失败:', e);
+  }
+}
+
+// 原有的发音功能（保持不变）
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.8;
+  utterance.pitch = 1;
+  speechSynthesis.speak(utterance);
+}
+
+// 原有的状态切换功能（添加保存功能）
+function toggleStatus(element) {
+  const statuses = ['default', 'unknown', 'learning', 'mastered'];
+  const statusNames = ['未标记', '陌生', '学习中', '掌握'];
+  
+  let currentIndex = 0;
+  for (let i = 0; i < statuses.length; i++) {
+    if (element.classList.contains(statuses[i])) {
+      currentIndex = i;
+      element.classList.remove(statuses[i]);
+      break;
+    }
+  }
+  
+  const nextIndex = (currentIndex + 1) % statuses.length;
+  element.classList.add(statuses[nextIndex]);
+  element.title = statusNames[nextIndex];
+  
+  // 添加保存功能
+  saveStatus();
+}
+
+// 页面加载完成后加载状态
+document.addEventListener('DOMContentLoaded', function() {
+  loadStatus();
+});
+</script>
+</body>
+</html>
